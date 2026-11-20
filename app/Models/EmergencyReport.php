@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EmergencyReport extends Model
@@ -18,6 +19,8 @@ class EmergencyReport extends Model
         'reporter_phone',
         'description',
         'status',
+        'follow_up',
+        'tracking_code',
     ];
 
     protected $casts = [
@@ -29,3 +32,4 @@ class EmergencyReport extends Model
         return $this->belongsTo(User::class);
     }
 }
+

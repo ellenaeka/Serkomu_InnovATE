@@ -1099,7 +1099,7 @@
                 <!-- SMALL SERVICES -->
                 <section class="service-grid-small">
 
-                    <a href="#" class="small-card">
+                    <a href="#riwayat-laporan" class="small-card">
                         <div class="small-icon">
                             <i class="bi bi-person-lines-fill"></i>
                         </div>
@@ -1110,7 +1110,7 @@
                         </div>
                     </a>
 
-                    <a href="#" class="small-card">
+                    <a href="{{ route('mahasiswa.status') }}" class="small-card">
                         <div class="small-icon">
                             <i class="bi bi-chat-dots-fill"></i>
                         </div>
@@ -1224,6 +1224,59 @@
 
                 </section>
 
+                <!-- RIWAYAT LAPORAN DARURAT -->
+                <section class="panel" id="riwayat-laporan">
+
+                    <div class="panel-heading">
+                        <h3>Riwayat Laporan Darurat</h3>
+                    </div>
+
+                    @forelse($laporanSaya as $item)
+
+                        <div style="border:1px solid #edf0f7; border-radius:12px; padding:14px; margin-bottom:12px;">
+
+                            <div style="font-size:12px; font-weight:800; margin-bottom:7px;">
+                                {{ $item->incident_type }}
+                            </div>
+
+                            <p class="info-desc">
+                                Lokasi: {{ $item->location }}
+                            </p>
+
+                            <p class="info-desc" style="margin-top:6px;">
+                                Waktu: {{ $item->incident_time?->format('d-m-Y H:i') ?? '-' }}
+                            </p>
+
+                            <div style="margin-top:10px;">
+                                <span class="visit-status">
+                                    {{ $item->status }}
+                                </span>
+                            </div>
+
+                            <div style="margin-top:12px; font-size:11px;">
+                                <strong>Catatan Tindak Lanjut Petugas:</strong>
+
+                                <p class="info-desc" style="margin-top:6px; line-height:1.6;">
+                                    {{ $item->follow_up ?: 'Belum ada catatan tindak lanjut.' }}
+                                </p>
+                            </div>
+
+                        </div>
+
+                    @empty
+
+                        <div class="empty-state">
+                            <i class="bi bi-file-earmark-text"></i>
+                            <p>
+                                Belum ada laporan darurat.<br>
+                                Laporan yang kamu buat akan muncul di sini.
+                            </p>
+                        </div>
+
+                     @endforelse
+
+                </section>
+
 
                 <!-- GUIDE -->
                 <a href="#" class="guide-link">
@@ -1285,12 +1338,12 @@
         Lapor
     </a>
 
-    <a href="#" class="nav-item-custom">
+    <a href="{{ route('mahasiswa.klinik') }}" class="nav-item-custom">
         <i class="bi bi-hospital"></i>
         Klinik
     </a>
 
-    <a href="#" class="nav-item-custom">
+    <a href="{{ route('mahasiswa.status') }}" class="nav-item-custom">
         <i class="bi bi-clipboard-check"></i>
         Status
     </a>
@@ -1299,7 +1352,6 @@
         <i class="bi bi-person"></i>
         Akun
     </a>
-
 </nav>
 
 </body>
