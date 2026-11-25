@@ -16,6 +16,12 @@ class User extends Authenticatable
         'password',
         'role',
         'nim',
+        'program_studi',
+        'fakultas',
+        'phone',
+        'whatsapp',
+        'auth_method',
+        'profile_photo',
     ];
 
     protected $hidden = [
@@ -31,15 +37,18 @@ class User extends Authenticatable
         ];
     }
 
-    // Memeriksa apakah pengguna adalah mahasiswa
     public function isMahasiswa(): bool
     {
         return $this->role === 'mahasiswa';
     }
 
-    // Memeriksa apakah pengguna adalah petugas
     public function isPetugas(): bool
     {
         return $this->role === 'petugas';
+    }
+
+    public function isSSO(): bool
+    {
+        return $this->auth_method === 'sso';
     }
 }

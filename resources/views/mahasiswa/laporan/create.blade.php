@@ -6,6 +6,7 @@
     <title>Buat Laporan - SerKoMu</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
     <style>
         :root {
@@ -17,9 +18,7 @@
             --danger: #d74747;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -30,11 +29,9 @@
         }
 
         .page-container {
-            width: min(1100px, calc(100% - 48px));
-            margin: 35px auto;
+            width: min(1000px, calc(100% - 36px));
+            margin: 30px auto;
         }
-
-        /* HEADER */
 
         .page-header {
             display: flex;
@@ -58,9 +55,9 @@
             place-items: center;
         }
 
-        .brand-icon svg {
-            width: 28px;
-            height: 28px;
+        .brand-icon i {
+            font-size: 25px;
+            color: #2872ce;
         }
 
         .brand-name {
@@ -84,14 +81,12 @@
             font-weight: 600;
         }
 
-        /* MAIN CARD */
-
         .report-card {
             background: white;
             border: 1px solid #edf0f7;
             border-radius: 24px;
             padding: 35px 42px;
-            box-shadow: 0 12px 40px rgba(43, 63, 110, .07);
+            box-shadow: 0 12px 40px rgba(43,63,110,.07);
         }
 
         .page-title {
@@ -103,7 +98,7 @@
         .page-description {
             font-size: 14px;
             color: var(--muted);
-            line-height: 1.6;
+            line-height: 1.7;
             margin-bottom: 20px;
         }
 
@@ -119,11 +114,9 @@
             margin-left: 3px;
         }
 
-        /* STEP INDICATOR */
-
         .step-indicator {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(3,1fr);
             gap: 12px;
             margin-bottom: 32px;
         }
@@ -136,7 +129,6 @@
             font-size: 12px;
             text-align: center;
             font-weight: 600;
-            transition: .2s;
         }
 
         .step-item.active {
@@ -149,11 +141,7 @@
             color: #29804d;
         }
 
-        /* FORM STEPS */
-
-        .form-step {
-            display: none;
-        }
+        .form-step { display: none; }
 
         .form-step.active {
             display: block;
@@ -180,11 +168,9 @@
         .section-description {
             color: var(--muted);
             font-size: 13px;
-            line-height: 1.6;
+            line-height: 1.7;
             margin-bottom: 25px;
         }
-
-        /* FORM INPUT */
 
         .form-label {
             font-size: 13px;
@@ -212,7 +198,7 @@
         .form-control:focus,
         .form-select:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(23, 100, 177, .10);
+            box-shadow: 0 0 0 3px rgba(23,100,177,.10);
             background: white;
         }
 
@@ -221,8 +207,6 @@
             color: var(--muted);
             margin-top: 7px;
         }
-
-        /* INFORMATION BOX */
 
         .info-box {
             display: flex;
@@ -233,11 +217,9 @@
             border-radius: 13px;
             color: #52688e;
             font-size: 12px;
-            line-height: 1.6;
+            line-height: 1.7;
             margin-top: 20px;
         }
-
-        /* BUTTONS */
 
         .button-group {
             display: flex;
@@ -245,10 +227,8 @@
             margin-top: 30px;
         }
 
-        .btn-primary-custom {
-            background: var(--primary);
-            color: white;
-            border: none;
+        .btn-primary-custom,
+        .btn-secondary-custom {
             border-radius: 11px;
             padding: 14px 22px;
             font-size: 13px;
@@ -256,20 +236,26 @@
             flex: 1;
         }
 
+        .btn-primary-custom {
+            background: var(--primary);
+            color: white;
+            border: none;
+        }
+
         .btn-primary-custom:hover {
             background: var(--primary-dark);
             color: white;
+        }
+
+        .btn-primary-custom:disabled {
+            opacity: .7;
+            cursor: not-allowed;
         }
 
         .btn-secondary-custom {
             background: white;
             color: #60708e;
             border: 1px solid var(--border);
-            border-radius: 11px;
-            padding: 14px 22px;
-            font-size: 13px;
-            font-weight: 600;
-            flex: 1;
         }
 
         .btn-emergency {
@@ -290,8 +276,6 @@
             background: #fff0f0;
             color: #a83232;
         }
-
-        /* REVIEW */
 
         .review-card {
             background: #f7f9ff;
@@ -335,7 +319,7 @@
             padding: 16px;
             border-radius: 12px;
             font-size: 12px;
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
         .confirmation input {
@@ -352,7 +336,7 @@
             padding: 15px;
             border-radius: 12px;
             font-size: 12px;
-            line-height: 1.6;
+            line-height: 1.7;
             margin-top: 15px;
         }
 
@@ -363,9 +347,12 @@
             margin-top: 25px;
         }
 
-        /* RESPONSIVE */
+        .word-limit-error {
+            color: var(--danger);
+            font-weight: 700;
+        }
 
-        @media (max-width: 768px) {
+        @media(max-width:768px) {
             .page-container {
                 width: calc(100% - 28px);
                 margin: 18px auto;
@@ -376,17 +363,11 @@
                 border-radius: 19px;
             }
 
-            .page-title {
-                font-size: 23px;
-            }
+            .page-title { font-size: 23px; }
 
-            .page-description {
-                font-size: 13px;
-            }
+            .page-description { font-size: 13px; }
 
-            .step-indicator {
-                gap: 6px;
-            }
+            .step-indicator { gap: 6px; }
 
             .step-item {
                 padding: 11px 5px;
@@ -397,23 +378,13 @@
                 flex-direction: column-reverse;
             }
 
-            .button-group button {
-                width: 100%;
-            }
+            .button-group button { width: 100%; }
         }
 
-        @media (max-width: 400px) {
-            .brand-name {
-                font-size: 20px;
-            }
-
-            .back-link {
-                font-size: 12px;
-            }
-
-            .report-card {
-                padding: 22px 16px;
-            }
+        @media(max-width:400px) {
+            .brand-name { font-size: 20px; }
+            .back-link { font-size: 12px; }
+            .report-card { padding: 22px 16px; }
         }
     </style>
 </head>
@@ -423,16 +394,13 @@
 <div class="page-container">
 
     <!-- HEADER -->
+
     <header class="page-header">
 
         <div class="brand">
 
             <div class="brand-icon">
-                <svg viewBox="0 0 32 32" fill="none"
-                     xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 3H20V12H29V20H20V29H12V20H3V12H12V3Z"
-                          fill="#2872CE"/>
-                </svg>
+                <i class="bi bi-plus-square-fill"></i>
             </div>
 
             <div>
@@ -446,13 +414,13 @@
 
         <a href="{{ route('mahasiswa.dashboard') }}"
            class="back-link">
-            ← Kembali
+            <i class="bi bi-arrow-left"></i> Kembali
         </a>
 
     </header>
 
-
     <!-- MAIN FORM -->
+
     <main class="report-card">
 
         <h1 class="page-title">Buat Laporan</h1>
@@ -468,8 +436,8 @@
             Semua kolom bertanda bintang wajib diisi.
         </p>
 
-
         <!-- NOTIFICATION -->
+
         @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
@@ -479,7 +447,6 @@
         @if($errors->any())
             <div class="alert alert-danger">
                 <strong>Periksa kembali data laporan:</strong>
-
                 <ul class="mb-0 mt-2">
                     @foreach($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -488,8 +455,8 @@
             </div>
         @endif
 
-
         <!-- STEP INDICATOR -->
+
         <div class="step-indicator">
 
             <div class="step-item active" data-indicator="0">
@@ -506,7 +473,6 @@
 
         </div>
 
-
         <form action="{{ route('emergency-reports.store') }}"
               method="POST"
               id="reportForm"
@@ -514,16 +480,11 @@
 
             @csrf
 
-
-            <!-- ================================== -->
-            <!-- LANGKAH 1: DATA KEJADIAN -->
-            <!-- ================================== -->
+            <!-- LANGKAH 1 -->
 
             <section class="form-step active" data-step="0">
 
-                <h2 class="section-title">
-                    Laporkan Kejadian
-                </h2>
+                <h2 class="section-title">Laporkan Kejadian</h2>
 
                 <p class="section-description">
                     Catat informasi awal mengenai jenis kejadian,
@@ -531,8 +492,6 @@
                     kondisi yang membutuhkan bantuan.
                 </p>
 
-
-                <!-- JENIS KEJADIAN -->
                 <div class="mb-4">
 
                     <label class="form-label">
@@ -546,37 +505,17 @@
 
                         <option value="">Pilih jenis kejadian</option>
 
-                        <option value="Bantuan Medis"
-                            @selected(old('incident_type') == 'Bantuan Medis')>
-                            Bantuan Medis
-                        </option>
-
-                        <option value="Kecelakaan"
-                            @selected(old('incident_type') == 'Kecelakaan')>
-                            Kecelakaan
-                        </option>
-
-                        <option value="Keamanan"
-                            @selected(old('incident_type') == 'Keamanan')>
-                            Keamanan
-                        </option>
-
-                        <option value="Kehilangan"
-                            @selected(old('incident_type') == 'Kehilangan')>
-                            Kehilangan
-                        </option>
-
-                        <option value="Lainnya"
-                            @selected(old('incident_type') == 'Lainnya')>
-                            Lainnya
-                        </option>
+                        @foreach(['Bantuan Medis','Kecelakaan','Keamanan','Kehilangan','Lainnya'] as $jenis)
+                            <option value="{{ $jenis }}"
+                                @selected(old('incident_type') == $jenis)>
+                                {{ $jenis }}
+                            </option>
+                        @endforeach
 
                     </select>
 
                 </div>
 
-
-                <!-- KATEGORI LOKASI -->
                 <div class="mb-4">
 
                     <label class="form-label">
@@ -590,42 +529,17 @@
 
                         <option value="">Pilih kategori lokasi</option>
 
-                        <option value="Gedung Perkuliahan"
-                            @selected(old('location_category') == 'Gedung Perkuliahan')>
-                            Gedung Perkuliahan
-                        </option>
-
-                        <option value="Asrama"
-                            @selected(old('location_category') == 'Asrama')>
-                            Asrama
-                        </option>
-
-                        <option value="Area Parkir"
-                            @selected(old('location_category') == 'Area Parkir')>
-                            Area Parkir
-                        </option>
-
-                        <option value="Fasilitas Kampus"
-                            @selected(old('location_category') == 'Fasilitas Kampus')>
-                            Fasilitas Kampus
-                        </option>
-
-                        <option value="Area Luar Kampus"
-                            @selected(old('location_category') == 'Area Luar Kampus')>
-                            Area Luar Kampus
-                        </option>
-
-                        <option value="Lainnya"
-                            @selected(old('location_category') == 'Lainnya')>
-                            Lainnya
-                        </option>
+                        @foreach(['Gedung Perkuliahan','Asrama','Area Parkir','Fasilitas Kampus','Area Luar Kampus','Lainnya'] as $kategori)
+                            <option value="{{ $kategori }}"
+                                @selected(old('location_category') == $kategori)>
+                                {{ $kategori }}
+                            </option>
+                        @endforeach
 
                     </select>
 
                 </div>
 
-
-                <!-- LOKASI KEJADIAN -->
                 <div class="mb-4">
 
                     <label class="form-label">
@@ -633,20 +547,16 @@
                         <span class="required-mark">*</span>
                     </label>
 
-                    <input
-                        type="text"
-                        name="location"
-                        class="form-control"
-                        placeholder="Contoh: Gedung Kuliah TULT"
-                        value="{{ old('location') }}"
-                        maxlength="255"
-                        required
-                    >
+                    <input type="text"
+                           name="location"
+                           class="form-control"
+                           placeholder="Contoh: Gedung Kuliah TULT"
+                           value="{{ old('location') }}"
+                           maxlength="255"
+                           required>
 
                 </div>
 
-
-                <!-- DETAIL LOKASI -->
                 <div class="mb-4">
 
                     <label class="form-label">
@@ -654,15 +564,13 @@
                         <span class="required-mark">*</span>
                     </label>
 
-                    <input
-                        type="text"
-                        name="detail_location"
-                        class="form-control"
-                        placeholder="Contoh: Lantai 3, Ruang A-315"
-                        value="{{ old('detail_location') }}"
-                        maxlength="255"
-                        required
-                    >
+                    <input type="text"
+                           name="detail_location"
+                           class="form-control"
+                           placeholder="Contoh: Lantai 3, Ruang A-315"
+                           value="{{ old('detail_location') }}"
+                           maxlength="255"
+                           required>
 
                     <div class="form-hint">
                         Tuliskan lantai, nomor ruangan, blok,
@@ -671,8 +579,6 @@
 
                 </div>
 
-
-                <!-- WAKTU KEJADIAN -->
                 <div class="mb-4">
 
                     <label class="form-label">
@@ -680,72 +586,54 @@
                         <span class="required-mark">*</span>
                     </label>
 
-                    <input
-                        type="datetime-local"
-                        name="incident_time"
-                        class="form-control"
-                        value="{{ old('incident_time') }}"
-                        required
-                    >
+                    <input type="datetime-local"
+                           name="incident_time"
+                           class="form-control"
+                           value="{{ old('incident_time') }}"
+                           required>
 
                 </div>
 
-
                 <div class="info-box">
-
-                    <span>ⓘ</span>
-
+                    <i class="bi bi-info-circle-fill"></i>
                     <span>
                         Pastikan lokasi dan waktu kejadian sudah benar.
                         Informasi ini membantu petugas menemukan lokasi
                         kejadian dengan lebih mudah.
                     </span>
-
                 </div>
-
 
                 <div class="button-group">
 
                     <button type="button"
                             class="btn-primary-custom"
                             onclick="nextStep()">
-
-                        Lanjutkan ke Detail →
-
+                        Lanjutkan ke Detail
+                        <i class="bi bi-arrow-right"></i>
                     </button>
 
                 </div>
 
-
                 <a href="#"
                    class="btn-emergency"
                    onclick="showEmergencyNotice(event)">
-
-                    ☎ Telepon Bantuan Darurat
-
+                    <i class="bi bi-telephone-fill"></i>
+                    Telepon Bantuan Darurat
                 </a>
 
             </section>
 
-
-
-            <!-- ================================== -->
-            <!-- LANGKAH 2: DETAIL LAPORAN -->
-            <!-- ================================== -->
+            <!-- LANGKAH 2 -->
 
             <section class="form-step" data-step="1">
 
-                <h2 class="section-title">
-                    Detail Pelaporan
-                </h2>
+                <h2 class="section-title">Detail Pelaporan</h2>
 
                 <p class="section-description">
                     Lengkapi identitas dan informasi kontak agar
                     petugas dapat menghubungi pelapor jika diperlukan.
                 </p>
 
-
-                <!-- NAMA PELAPOR -->
                 <div class="mb-4">
 
                     <label class="form-label">
@@ -753,20 +641,16 @@
                         <span class="required-mark">*</span>
                     </label>
 
-                    <input
-                        type="text"
-                        name="reporter_name"
-                        class="form-control"
-                        placeholder="Masukkan nama lengkap"
-                        value="{{ old('reporter_name', auth()->user()->name) }}"
-                        maxlength="100"
-                        required
-                    >
+                    <input type="text"
+                           name="reporter_name"
+                           class="form-control"
+                           placeholder="Masukkan nama lengkap"
+                           value="{{ old('reporter_name', auth()->user()->name) }}"
+                           maxlength="100"
+                           required>
 
                 </div>
 
-
-                <!-- NOMOR WHATSAPP -->
                 <div class="mb-4">
 
                     <label class="form-label">
@@ -774,16 +658,14 @@
                         <span class="required-mark">*</span>
                     </label>
 
-                    <input
-                        type="tel"
-                        name="reporter_phone"
-                        class="form-control"
-                        placeholder="Contoh: 081234567890"
-                        value="{{ old('reporter_phone') }}"
-                        pattern="[0-9+\- ]{9,20}"
-                        maxlength="20"
-                        required
-                    >
+                    <input type="tel"
+                           name="reporter_phone"
+                           class="form-control"
+                           placeholder="Contoh: 081234567890"
+                           value="{{ old('reporter_phone') }}"
+                           pattern="[0-9+\- ]{9,20}"
+                           maxlength="20"
+                           required>
 
                     <div class="form-hint">
                         Gunakan nomor WhatsApp aktif yang dapat dihubungi.
@@ -791,8 +673,6 @@
 
                 </div>
 
-
-                <!-- DESKRIPSI -->
                 <div class="mb-4">
 
                     <label class="form-label">
@@ -800,91 +680,68 @@
                         <span class="required-mark">*</span>
                     </label>
 
-                    <textarea
-                        name="description"
-                        id="description"
-                        class="form-control"
-                        maxlength="5000"
-                        placeholder="Jelaskan kondisi atau kejadian secara singkat dan jelas..."
-                        required
-                    >{{ old('description') }}</textarea>
+                    <textarea name="description"
+                              id="description"
+                              class="form-control"
+                              maxlength="5000"
+                              placeholder="Jelaskan kondisi atau kejadian secara singkat dan jelas..."
+                              required>{{ old('description') }}</textarea>
 
                     <div class="form-hint d-flex justify-content-between">
-
-                        <span>
-                            Maksimal 300 kata.
-                        </span>
-
+                        <span>Maksimal 300 kata.</span>
                         <span>
                             <strong id="wordCount">0</strong>/300 kata
                         </span>
-
                     </div>
 
                 </div>
 
-
                 <div class="info-box">
-
-                    <span>ⓘ</span>
-
+                    <i class="bi bi-info-circle-fill"></i>
                     <span>
                         Jelaskan kejadian sesuai kondisi sebenarnya.
                         Hindari informasi yang tidak berkaitan dengan
                         penanganan laporan.
                     </span>
-
                 </div>
-
 
                 <div class="button-group">
 
                     <button type="button"
                             class="btn-secondary-custom"
                             onclick="previousStep()">
-
-                        ← Kembali
-
+                        <i class="bi bi-arrow-left"></i>
+                        Kembali
                     </button>
 
                     <button type="button"
                             class="btn-primary-custom"
                             onclick="nextStep()">
-
-                        Lanjutkan ke Tinjau →
-
+                        Lanjutkan ke Tinjau
+                        <i class="bi bi-arrow-right"></i>
                     </button>
 
                 </div>
 
-
                 <a href="#"
                    class="btn-emergency"
                    onclick="showEmergencyNotice(event)">
-
-                    ☎ Butuh bantuan segera? Telepon Bantuan Darurat
-
+                    <i class="bi bi-telephone-fill"></i>
+                    Butuh bantuan segera? Telepon Bantuan Darurat
                 </a>
 
             </section>
 
-
-
-            <!-- ================================== -->
-            <!-- LANGKAH 3: TINJAU LAPORAN -->
-            <!-- ================================== -->
+            <!-- LANGKAH 3 -->
 
             <section class="form-step" data-step="2">
 
-                <h2 class="section-title">
-                    Periksa Kembali Laporan
-                </h2>
+                <h2 class="section-title">Periksa Kembali Laporan</h2>
 
                 <p class="section-description">
                     Pastikan seluruh informasi telah sesuai sebelum
                     laporan diteruskan kepada petugas.
                 </p>
-
 
                 <div class="review-card">
 
@@ -892,97 +749,53 @@
                         Ringkasan Laporan
 
                         <span style="color:#1764b1;font-size:11px;">
-                            ✓ Data Pelapor
+                            <i class="bi bi-check-circle-fill"></i>
+                            Data Pelapor
                         </span>
                     </div>
 
+                    @php
+                        $reviewFields = [
+                            'incident_type' => ['Jenis Kejadian','reviewIncident'],
+                            'location_category' => ['Kategori Lokasi','reviewCategory'],
+                            'location' => ['Lokasi Kejadian','reviewLocation'],
+                            'detail_location' => ['Detail Lokasi','reviewDetail'],
+                            'incident_time' => ['Waktu Kejadian','reviewTime'],
+                            'reporter_name' => ['Nama Pelapor','reviewName'],
+                            'reporter_phone' => ['Nomor Kontak','reviewPhone'],
+                            'description' => ['Keterangan Kejadian','reviewDescription']
+                        ];
+                    @endphp
 
-                    <div class="review-row">
-                        <div class="review-label">
-                            Jenis Kejadian
+                    @foreach($reviewFields as $field => $data)
+
+                        <div class="review-row">
+
+                            <div class="review-label">
+                                {{ $data[0] }}
+                            </div>
+
+                            <div class="review-value"
+                                 id="{{ $data[1] }}">-</div>
+
                         </div>
 
-                        <div class="review-value" id="reviewIncident">-</div>
-                    </div>
-
-
-                    <div class="review-row">
-                        <div class="review-label">
-                            Kategori Lokasi
-                        </div>
-
-                        <div class="review-value" id="reviewCategory">-</div>
-                    </div>
-
-
-                    <div class="review-row">
-                        <div class="review-label">
-                            Lokasi Kejadian
-                        </div>
-
-                        <div class="review-value" id="reviewLocation">-</div>
-                    </div>
-
-
-                    <div class="review-row">
-                        <div class="review-label">
-                            Detail Lokasi
-                        </div>
-
-                        <div class="review-value" id="reviewDetail">-</div>
-                    </div>
-
-
-                    <div class="review-row">
-                        <div class="review-label">
-                            Waktu Kejadian
-                        </div>
-
-                        <div class="review-value" id="reviewTime">-</div>
-                    </div>
-
-
-                    <div class="review-row">
-                        <div class="review-label">
-                            Nama Pelapor
-                        </div>
-
-                        <div class="review-value" id="reviewName">-</div>
-                    </div>
-
-
-                    <div class="review-row">
-                        <div class="review-label">
-                            Nomor Kontak
-                        </div>
-
-                        <div class="review-value" id="reviewPhone">-</div>
-                    </div>
-
-
-                    <div class="review-row">
-                        <div class="review-label">
-                            Keterangan Kejadian
-                        </div>
-
-                        <div class="review-value" id="reviewDescription">-</div>
-                    </div>
+                    @endforeach
 
                 </div>
 
-
                 <!-- PERSETUJUAN -->
+
                 <div class="confirmation mb-3">
 
                     <label class="d-flex gap-2 align-items-start">
 
-                        <input
-                            type="checkbox"
-                            name="confirmation"
-                            value="1"
-                            id="confirmation"
-                            required
-                        >
+                        <input type="checkbox"
+                               name="confirmation"
+                               value="1"
+                               id="confirmation"
+                               required
+                               @checked(old('confirmation'))>
 
                         <span>
                             Saya menyatakan bahwa informasi yang saya
@@ -995,11 +808,14 @@
 
                 </div>
 
-
                 <!-- PERINGATAN -->
+
                 <div class="warning-box">
 
-                    <strong>⚠ Pemberitahuan Penting</strong>
+                    <strong>
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        Pemberitahuan Penting
+                    </strong>
 
                     <br>
 
@@ -1010,33 +826,29 @@
 
                 </div>
 
-
                 <div class="button-group">
 
                     <button type="button"
                             class="btn-secondary-custom"
                             onclick="previousStep()">
-
-                        ← Kembali
-
+                        <i class="bi bi-arrow-left"></i>
+                        Kembali
                     </button>
 
                     <button type="submit"
-                            class="btn-primary-custom">
-
-                        ➤ Kirim Laporan
-
+                            class="btn-primary-custom"
+                            id="submitButton">
+                        <i class="bi bi-send-fill"></i>
+                        Kirim Laporan
                     </button>
 
                 </div>
 
-
                 <a href="#"
                    class="btn-emergency"
                    onclick="showEmergencyNotice(event)">
-
-                    ☎ Butuh bantuan segera? Telepon Bantuan Darurat
-
+                    <i class="bi bi-telephone-fill"></i>
+                    Butuh bantuan segera? Telepon Bantuan Darurat
                 </a>
 
             </section>
@@ -1045,191 +857,182 @@
 
     </main>
 
-
     <footer class="footer">
         SerKoMu © 2026 — Student Health Assistance
     </footer>
 
 </div>
 
+<!-- POPUP BANTUAN DARURAT -->
 
-<!-- JAVASCRIPT -->
+<div class="modal fade" id="emergencyModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0" style="border-radius:18px;">
+
+            <div class="modal-body text-center p-4">
+
+                <div style="font-size:40px;color:#d74747;">
+                    <i class="bi bi-telephone-x-fill"></i>
+                </div>
+
+                <h5 class="fw-bold mt-3">
+                    Bantuan Darurat
+                </h5>
+
+                <p class="text-muted small">
+                    Jika kondisi membutuhkan pertolongan segera,
+                    hubungi layanan darurat resmi kampus atau
+                    layanan kegawatdaruratan setempat.
+                </p>
+
+                <button type="button"
+                        class="btn btn-primary w-100"
+                        data-bs-dismiss="modal">
+                    Saya Mengerti
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
-
     let currentStep = 0;
 
     const steps = document.querySelectorAll('.form-step');
-
     const indicators = document.querySelectorAll('.step-item');
-
     const form = document.getElementById('reportForm');
-
-
-    // Menghitung jumlah kata
     const description = document.getElementById('description');
 
-    function countWords(value) {
+    // MENGHITUNG JUMLAH KATA
 
+    function countWords(value) {
         const text = value.trim();
 
-        if (!text) {
-            return 0;
-        }
+        if (!text) return 0;
 
         return text.split(/\s+/).length;
-
     }
-
 
     function updateWordCount() {
-
         const words = countWords(description.value);
+        const counter = document.getElementById('wordCount');
 
-        document.getElementById('wordCount').textContent = words;
+        counter.textContent = words;
 
-        document.getElementById('wordCount').style.color =
-            words > 300 ? '#d74747' : '';
-
+        counter.classList.toggle(
+            'word-limit-error',
+            words > 300
+        );
     }
 
-
     description.addEventListener('input', updateWordCount);
-
     updateWordCount();
 
+    // MENAMPILKAN LANGKAH
 
-    // Menampilkan langkah tertentu
     function showStep(step) {
-
         currentStep = step;
 
         steps.forEach((item, index) => {
-
-            item.classList.toggle(
-                'active',
-                index === step
-            );
-
+            item.classList.toggle('active', index === step);
         });
-
 
         indicators.forEach((item, index) => {
-
-            item.classList.toggle(
-                'active',
-                index === step
-            );
-
-            item.classList.toggle(
-                'completed',
-                index < step
-            );
-
+            item.classList.toggle('active', index === step);
+            item.classList.toggle('completed', index < step);
         });
-
 
         if (step === 2) {
             updateReview();
         }
 
-
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
         });
-
     }
 
+    // VALIDASI LANGKAH AKTIF
 
-    // Validasi kolom pada langkah aktif
     function validateCurrentStep() {
-
         const currentFields = steps[currentStep].querySelectorAll(
             'input:not([type="checkbox"]), select, textarea'
         );
 
-
         for (const field of currentFields) {
-
             if (!field.checkValidity()) {
-
                 field.reportValidity();
-
                 field.focus();
-
                 return false;
-
             }
-
         }
 
-
-        // Validasi maksimal 300 kata
         if (currentStep === 1) {
-
             const words = countWords(description.value);
 
             if (words > 300) {
-
                 alert('Ringkasan kejadian maksimal 300 kata.');
-
                 description.focus();
-
                 return false;
-
             }
-
         }
-
 
         return true;
-
     }
 
+    // TOMBOL LANJUT
 
-    // Tombol lanjut
     function nextStep() {
-
-        if (!validateCurrentStep()) {
-            return;
-        }
+        if (!validateCurrentStep()) return;
 
         if (currentStep < 2) {
-
             showStep(currentStep + 1);
-
         }
-
     }
 
+    // TOMBOL KEMBALI
 
-    // Tombol kembali
     function previousStep() {
-
         if (currentStep > 0) {
-
             showStep(currentStep - 1);
-
         }
-
     }
 
+    // MENGAMBIL NILAI INPUT
 
-    // Mengambil nilai input
     function getValue(name) {
-
         const field = form.querySelector(
             '[name="' + name + '"]'
         );
 
         return field ? field.value.trim() : '';
-
     }
 
+    // FORMAT WAKTU
 
-    // Mengisi ringkasan laporan
+    function formatIncidentTime(value) {
+        if (!value) return '-';
+
+        const date = new Date(value);
+
+        if (isNaN(date.getTime())) return value;
+
+        return date.toLocaleString('id-ID', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
+    // RINGKASAN LAPORAN
+
     function updateReview() {
-
         document.getElementById('reviewIncident').textContent =
             getValue('incident_type');
 
@@ -1243,7 +1046,7 @@
             getValue('detail_location');
 
         document.getElementById('reviewTime').textContent =
-            getValue('incident_time');
+            formatIncidentTime(getValue('incident_time'));
 
         document.getElementById('reviewName').textContent =
             getValue('reporter_name');
@@ -1253,55 +1056,61 @@
 
         document.getElementById('reviewDescription').textContent =
             getValue('description');
-
     }
 
+    // VALIDASI SEBELUM PENGIRIMAN
 
-    // Validasi saat mengirim laporan
     form.addEventListener('submit', function(event) {
 
         if (!validateCurrentStep()) {
-
             event.preventDefault();
-
             return;
-
         }
 
-
-        const confirmation =
-            document.getElementById('confirmation');
-
+        const confirmation = document.getElementById('confirmation');
 
         if (!confirmation.checked) {
-
             event.preventDefault();
 
             alert('Persetujuan laporan wajib dicentang.');
 
             confirmation.focus();
+            return;
+        }
+
+        if (countWords(description.value) > 300) {
+            event.preventDefault();
+
+            alert('Ringkasan kejadian maksimal 300 kata.');
+
+            showStep(1);
+            description.focus();
 
             return;
-
         }
+
+        const submitButton = document.getElementById('submitButton');
+
+        submitButton.disabled = true;
+        submitButton.innerHTML =
+            '<span class="spinner-border spinner-border-sm me-2"></span> Mengirim laporan...';
 
     });
 
+    // POPUP BANTUAN DARURAT
 
-    // Informasi tombol darurat
     function showEmergencyNotice(event) {
-
         event.preventDefault();
 
-        alert(
-            'Silakan gunakan nomor layanan darurat resmi kampus. ' +
-            'Nomor bantuan akan dihubungkan setelah dikonfigurasi.'
+        const modal = new bootstrap.Modal(
+            document.getElementById('emergencyModal')
         );
 
+        modal.show();
     }
 
+    // MEMPERTAHANKAN LANGKAH SAAT VALIDASI LARAVEL GAGAL
 
-    // Mempertahankan langkah ketika Laravel mengembalikan error
     @if($errors->any())
 
         @if(

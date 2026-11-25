@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\EmergencyReport;
 
 class EmergencyReportController extends Controller
 {
-    // Memastikan hanya mahasiswa yang dapat membuat laporan
+    // ==========================================
+    // OTORISASI PENGGUNA
+    // ==========================================
+
     private function authorizeMahasiswa()
     {
         abort_unless(
@@ -17,23 +21,70 @@ class EmergencyReportController extends Controller
         );
     }
 
-    // Menampilkan halaman formulir laporan
+    private function authorizePetugas()
+    {
+        abort_unless(
+            auth()->check() && auth()->user()->role === 'petugas',
+            403,
+            'Akses hanya untuk petugas.'
+        );
+    }
+
+    // ==========================================
+    // HALAMAN UTAMA LAPOR MAHASISWA
+    // ==========================================
+
     public function create()
     {
         $this->authorizeMahasiswa();
 
-        return view('mahasiswa.laporan.create');
+        $laporanSaya = EmergencyReport::where(
+            'user_id',
+            auth()->id()
+        )
+            ->latest()
+            ->get();
+
+        $laporanDicari = null;
+
+        // Menampilkan kembali laporan yang baru dikirim
+        if (session()->has('tracking_code')) {
+            $laporanDicari = EmergencyReport::where(
+                'tracking_code',
+                session('tracking_code')
+            )
+                ->where('user_id', auth()->id())
+                ->first();
+        }
+
+        return view('mahasiswa.laporan.index', [
+            'activeTab' => 'track',
+            'laporanSaya' => $laporanSaya,
+            'laporanDicari' => $laporanDicari,
+        ]);
     }
 
-    // Memproses dan menyimpan laporan
+    // ==========================================
+    // HALAMAN STATUS LAMA
+    // ==========================================
+
+    public function statusForm()
+    {
+        $this->authorizeMahasiswa();
+
+        return redirect()->route('emergency-reports.create');
+    }
+
+    // ==========================================
+    // MENYIMPAN LAPORAN DARURAT
+    // ==========================================
+
     public function store(Request $request)
     {
         $this->authorizeMahasiswa();
 
-        // Validasi seluruh data laporan
         $validated = $request->validate([
 
-            // LANGKAH 1: DATA KEJADIAN
             'incident_type' => 'required|string|max:100',
 
             'location_category' => 'required|string|max:100',
@@ -44,21 +95,22 @@ class EmergencyReportController extends Controller
 
             'incident_time' => 'required|date',
 
-            // LANGKAH 2: DETAIL PELAPOR
             'reporter_name' => 'required|string|max:100',
 
             'reporter_phone' => [
                 'required',
                 'string',
                 'max:20',
-                'regex:/^[0-9+\-\s]{9,20}$/',
+                'regex:/^[0-9+\s-]{9,20}$/',
             ],
 
             'description' => [
                 'required',
                 'string',
                 'max:5000',
+
                 function ($attribute, $value, $fail) {
+
                     $words = preg_split(
                         '/\s+/u',
                         trim($value),
@@ -67,12 +119,13 @@ class EmergencyReportController extends Controller
                     );
 
                     if (count($words) > 300) {
-                        $fail('Ringkasan kejadian maksimal 300 kata.');
+                        $fail(
+                            'Ringkasan kejadian maksimal 300 kata.'
+                        );
                     }
                 },
             ],
 
-            // LANGKAH 3: PERSETUJUAN
             'confirmation' => 'accepted',
 
         ], [
@@ -109,55 +162,136 @@ class EmergencyReportController extends Controller
 
         ]);
 
-        // Simpan laporan ke database
-        EmergencyReport::create([
+        // TRANSAKSI DATABASE
 
-            'user_id' => $request->user()->id,
+        $laporan = DB::transaction(function () use ($validated) {
 
-            'incident_type' => $validated['incident_type'],
+            $laporan = EmergencyReport::create([
 
-            'location_category' => $validated['location_category'],
+                'user_id' => auth()->id(),
 
-            'location' => $validated['location'],
+                'incident_type' => $validated['incident_type'],
 
-            'detail_location' => $validated['detail_location'],
+                'location_category' => $validated['location_category'],
 
-            'incident_time' => $validated['incident_time'],
+                'location' => $validated['location'],
 
-            'reporter_name' => $validated['reporter_name'],
+                'detail_location' => $validated['detail_location'],
 
-            'reporter_phone' => $validated['reporter_phone'],
+                'incident_time' => $validated['incident_time'],
 
-            'description' => $validated['description'],
+                'reporter_name' => $validated['reporter_name'],
 
-            'status' => 'Menunggu',
+                'reporter_phone' => $validated['reporter_phone'],
 
-        ]);
-        //membbuat kode pelacakan otomatis
-        $trackingCode = 'SRK-' . now()->year . '-'.
-        str_pad(EmergencyReport::latest()->first()->id + 1, 4, '0', STR_PAD_LEFT);
+                'description' => $validated['description'],
 
-        $laporan->update([
-            'tracking_code' => $trackingCode,
-        ]);
+                'status' => 'Menunggu',
 
-        // Kembali ke dashboard setelah laporan berhasil dikirim
+            ]);
+
+            // MEMBUAT KODE PELACAKAN UNIK
+
+            $trackingCode = 'SRK-' .
+                now()->format('Y') . '-' .
+                str_pad(
+                    (string) $laporan->id,
+                    4,
+                    '0',
+                    STR_PAD_LEFT
+                );
+
+            $laporan->update([
+                'tracking_code' => $trackingCode,
+            ]);
+
+            return $laporan;
+        });
+
+        // KEMBALI KE HALAMAN LAPOR
+        // MENAMPILKAN KODE PELACAKAN
+
         return redirect()
-            ->route('mahasiswa.dashboard')
-            ->with('success', 'Laporan berhasil dikirim! Kode pelacakan: ' . $trackingCode);
-
+            ->route('emergency-reports.create')
+            ->with('success', 'Laporan darurat berhasil dikirim!')
+            ->with('tracking_code', $laporan->tracking_code)
+            ->with('active_tab', 'track');
     }
-    // Memastikan hanya petugas yang dapat melihat daftar laporan
-    private function authorizePetugas()
+
+    // ==========================================
+    // PENCARIAN STATUS LAPORAN
+    // ==========================================
+
+    public function track(Request $request)
     {
-        abort_unless(
-            auth()->check() && auth()->user()->role === 'petugas',
-            403,
-            'Akses hanya untuk petugas.'
+        $this->authorizeMahasiswa();
+
+        $validated = $request->validate([
+
+            'tracking_code' => 'required|string|max:50',
+
+        ], [
+
+            'tracking_code.required' =>
+                'Kode pelacakan wajib diisi.',
+
+        ]);
+
+        $kode = strtoupper(
+            trim($validated['tracking_code'])
         );
+
+        // AMBIL SELURUH RIWAYAT LAPORAN MAHASISWA
+
+        $laporanSaya = EmergencyReport::where(
+            'user_id',
+            auth()->id()
+        )
+            ->latest()
+            ->get();
+
+        // CARI LAPORAN BERDASARKAN KODE
+
+        $laporanDicari = EmergencyReport::where(
+            'tracking_code',
+            $kode
+        )
+            ->where('user_id', auth()->id())
+            ->first();
+
+        // JIKA KODE TIDAK DITEMUKAN
+
+        if (!$laporanDicari) {
+
+            return redirect()
+                ->route('emergency-reports.create')
+                ->withErrors([
+                    'tracking_code' =>
+                        'Kode laporan tidak ditemukan. Periksa kembali kode Anda.',
+                ])
+                ->withInput([
+                    'tracking_code' => $kode,
+                ])
+                ->with('active_tab', 'track');
+        }
+
+        // TAMPILKAN HASIL PENCARIAN
+
+        return view('mahasiswa.laporan.index', [
+
+            'activeTab' => 'track',
+
+            'laporanSaya' => $laporanSaya,
+
+            'laporanDicari' => $laporanDicari,
+
+        ]);
     }
 
-    // Menampilkan daftar laporan darurat untuk petugas
+    // ==========================================
+    // DAFTAR LAPORAN PETUGAS
+    // ==========================================
+
     public function index()
     {
         $this->authorizePetugas();
@@ -179,72 +313,55 @@ class EmergencyReportController extends Controller
             'laporanMenunggu'
         ));
     }
-    // Menampilkan detail satu laporan
+
+    // ==========================================
+    // DETAIL LAPORAN PETUGAS
+    // ==========================================
+
     public function show($id)
     {
         $this->authorizePetugas();
 
-        $laporan = EmergencyReport::findOrFail($id);
+        $laporan = EmergencyReport::with('user')
+            ->findOrFail($id);
 
-        return view('petugas.laporan.show', compact('laporan'));
+        return view(
+            'petugas.laporan.show',
+            compact('laporan')
+        );
     }
 
-    // Memproses tindak lanjut laporan oleh petugas
+    // ==========================================
+    // UPDATE STATUS DAN TINDAK LANJUT
+    // ==========================================
+
     public function update(Request $request, $id)
     {
         $this->authorizePetugas();
 
         $validated = $request->validate([
+
             'status' => 'required|in:Menunggu,Diproses,Selesai',
+
             'follow_up' => 'nullable|string|max:5000',
+
         ]);
 
         $laporan = EmergencyReport::findOrFail($id);
 
         $laporan->update([
+
             'status' => $validated['status'],
-            'follow_up' => $validated['follow_up'],
+
+            'follow_up' => $validated['follow_up'] ?? null,
+
         ]);
 
         return redirect()
             ->route('petugas.laporan.show', $laporan->id)
-            ->with('success', 'Tindak lanjut laporan berhasil diperbarui.');
+            ->with(
+                'success',
+                'Tindak lanjut laporan berhasil diperbarui.'
+            );
     }
-
-    // Menampilkan halaman cek status laporan
-    public function statusForm()
-    {
-        $this->authorizeMahasiswa();
-
-        return view('mahasiswa.laporan.status');
-    }
-
-
-    // Mencari laporan berdasarkan kode pelacakan
-    public function track(Request $request)
-    {
-        $this->authorizeMahasiswa();
-
-        $request->validate([
-            'tracking_code' => 'required|string|max:50',
-        ]);
-
-        $laporan = EmergencyReport::where(
-            'tracking_code',
-            $request->tracking_code
-        )
-        ->where('user_id', auth()->id())
-        ->first();
-
-        if (!$laporan) {
-            return back()
-                ->withErrors([
-                    'tracking_code' => 'Kode pelacakan tidak ditemukan.'
-                ])
-                ->withInput();
-        }
-
-        return view('mahasiswa.laporan.status', compact('laporan'));
-    }
-    
 }

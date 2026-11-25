@@ -4,11 +4,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\EmergencyReportController;
 use App\Http\Controllers\ClinicAppointmentController;
+use App\Http\Controllers\Mahasiswa\ProfileController;
+use App\Models\EmergencyReport;
+use App\Models\ClinicAppointment;
 
-
-// ==========================================
-// HALAMAN LOGIN
-// ==========================================
+// =====================================================
+// LOGIN
+// =====================================================
 
 Route::get('/login', [LoginController::class, 'showLogin'])
     ->name('login');
@@ -16,60 +18,101 @@ Route::get('/login', [LoginController::class, 'showLogin'])
 Route::post('/login', [LoginController::class, 'login'])
     ->name('login.process');
 
-
-// ==========================================
+// =====================================================
 // HALAMAN UTAMA
-// ==========================================
+// =====================================================
 
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
-
-// ==========================================
-// ROUTE KHUSUS PENGGUNA YANG SUDAH LOGIN
-// ==========================================
+// =====================================================
+// ROUTE PENGGUNA LOGIN
+// =====================================================
 
 Route::middleware(['auth'])->group(function () {
 
-    // --------------------------------------
+    // =================================================
     // DASHBOARD MAHASISWA
-    // --------------------------------------
+    // =================================================
 
     Route::get('/mahasiswa/dashboard', function () {
 
-        if (auth()->user()->role !== 'mahasiswa') {
-            abort(403, 'Akses hanya untuk mahasiswa.');
-        }
+        abort_unless(auth()->user()->role === 'mahasiswa', 403);
 
-        $laporanSaya = \App\Models\EmergencyReport::where(
+        $laporanSaya = EmergencyReport::where(
             'user_id',
             auth()->id()
         )->latest()->get();
 
-        return view('mahasiswa.dashboard', compact('laporanSaya'));
+        $totalKunjungan = ClinicAppointment::where(
+            'user_id',
+            auth()->id()
+        )
+            ->whereNotIn('status', ['Selesai', 'Dibatalkan'])
+            ->count();
+
+        $kunjunganMendatang = ClinicAppointment::where(
+            'user_id',
+            auth()->id()
+        )
+            ->whereNotIn('status', ['Selesai', 'Dibatalkan'])
+            ->orderBy('tanggal')
+            ->orderBy('jam')
+            ->limit(3)
+            ->get();
+
+        $riwayatKlinik = ClinicAppointment::where(
+            'user_id',
+            auth()->id()
+        )
+            ->whereIn('status', ['Selesai', 'Dibatalkan'])
+            ->orderByDesc('tanggal')
+            ->orderByDesc('jam')
+            ->limit(3)
+            ->get();
+
+        return view('mahasiswa.dashboard', compact(
+            'laporanSaya',
+            'totalKunjungan',
+            'kunjunganMendatang',
+            'riwayatKlinik'
+        ));
 
     })->name('mahasiswa.dashboard');
 
-    // DASHBOARD KLINIK MAHASISWA
-    Route::get('/mahasiswa/klinik', function () {
 
-        if (auth()->user()->role !== 'mahasiswa') {
-            abort(403);
-        }
+    // =================================================
+    // AKUN MAHASISWA
+    // =================================================
 
-        return view('mahasiswa.klinik');
+    Route::get('/mahasiswa/akun', [
+        ProfileController::class,
+        'index'
+    ])->name('mahasiswa.akun');
 
-    })->name('mahasiswa.klinik');
+    Route::put('/mahasiswa/akun', [
+        ProfileController::class,
+        'update'
+    ])->name('mahasiswa.akun.update');
 
-    // HALAMAN RIWAYAT KUNJUNGAN KLINIK
-    Route::get('/mahasiswa/klinik/riwayat', [
+    Route::put('/mahasiswa/akun/password', [
+        ProfileController::class,
+        'updatePassword'
+    ])->name('mahasiswa.akun.password');
+
+
+    // =================================================
+    // KLINIK MAHASISWA
+    // =================================================
+
+    Route::get('/mahasiswa/klinik', [
         ClinicAppointmentController::class,
-        'history'
-    ])->name('mahasiswa.klinik.riwayat');
+        'index'
+    ])->name('mahasiswa.klinik');
 
 
-    // PENDAFTARAN KUNJUNGAN KLINIK MAHASISWA
+    // PENDAFTARAN KUNJUNGAN
 
     Route::get('/mahasiswa/klinik/daftar', [
         ClinicAppointmentController::class,
@@ -82,20 +125,111 @@ Route::middleware(['auth'])->group(function () {
     ])->name('mahasiswa.klinik.store');
 
 
+    // CEK KETERSEDIAAN
 
-    // --------------------------------------
+    Route::get('/mahasiswa/klinik/availability', [
+        ClinicAppointmentController::class,
+        'availability'
+    ])->name('mahasiswa.klinik.availability');
+
+
+    // KONFIRMASI PENDAFTARAN
+
+    Route::get('/mahasiswa/klinik/konfirmasi', [
+        ClinicAppointmentController::class,
+        'confirmation'
+    ])->name('mahasiswa.klinik.confirmation');
+
+    Route::post('/mahasiswa/klinik/konfirmasi', [
+        ClinicAppointmentController::class,
+        'confirm'
+    ])->name('mahasiswa.klinik.confirm');
+
+
+    // BUKTI PENDAFTARAN
+
+    Route::get('/mahasiswa/klinik/bukti/{id}', [
+        ClinicAppointmentController::class,
+        'proof'
+    ])->whereNumber('id')
+      ->name('mahasiswa.klinik.bukti');
+
+
+    // PEMBATALAN KUNJUNGAN
+
+    Route::get('/mahasiswa/klinik/{id}/batalkan', [
+        ClinicAppointmentController::class,
+        'cancelForm'
+    ])->whereNumber('id')
+      ->name('mahasiswa.klinik.cancel.form');
+
+    Route::post('/mahasiswa/klinik/batal/{id}', [
+        ClinicAppointmentController::class,
+        'cancel'
+    ])->whereNumber('id')
+      ->name('mahasiswa.klinik.cancel');
+
+
+    // RIWAYAT KUNJUNGAN
+
+    Route::get('/mahasiswa/klinik/riwayat', [
+        ClinicAppointmentController::class,
+        'history'
+    ])->name('mahasiswa.klinik.riwayat');
+
+
+    // =================================================
+    // SISTEM LAPOR MAHASISWA
+    // =================================================
+
+    // HALAMAN UTAMA LAPOR
+
+    Route::get('/laporan-darurat', [
+        EmergencyReportController::class,
+        'create'
+    ])->name('emergency-reports.create');
+
+
+    // KIRIM LAPORAN DARURAT
+
+    Route::post('/laporan-darurat', [
+        EmergencyReportController::class,
+        'store'
+    ])->name('emergency-reports.store');
+
+
+    // CARI STATUS LAPORAN
+
+    Route::post('/laporan-darurat/track', [
+        EmergencyReportController::class,
+        'track'
+    ])->name('emergency-reports.track');
+
+
+    // KOMPATIBILITAS HALAMAN STATUS LAMA
+
+    Route::get('/mahasiswa/status-laporan', [
+        EmergencyReportController::class,
+        'statusForm'
+    ])->name('mahasiswa.status');
+
+    Route::post('/mahasiswa/status-laporan', [
+        EmergencyReportController::class,
+        'track'
+    ])->name('mahasiswa.status.track');
+
+
+    // =================================================
     // DASHBOARD PETUGAS
-    // --------------------------------------
+    // =================================================
 
     Route::get('/petugas/dashboard', function () {
 
-        if (auth()->user()->role !== 'petugas') {
-            abort(403, 'Akses hanya untuk petugas.');
-        }
+        abort_unless(auth()->user()->role === 'petugas', 403);
 
-        $totalLaporan = \App\Models\EmergencyReport::count();
+        $totalLaporan = EmergencyReport::count();
 
-        $laporanMenunggu = \App\Models\EmergencyReport::where(
+        $laporanMenunggu = EmergencyReport::where(
             'status',
             'Menunggu'
         )->count();
@@ -107,55 +241,42 @@ Route::middleware(['auth'])->group(function () {
 
     })->name('petugas.dashboard');
 
-     // DASHBOARD DAFTAR LAPORAN PETUGAS
+
+    // =================================================
+    // DAFTAR LAPORAN PETUGAS
+    // =================================================
+
     Route::get('/petugas/laporan', [
         EmergencyReportController::class,
         'index'
     ])->name('petugas.laporan.index');
 
-    // CEK STATUS LAPORAN MAHASISWA
-    Route::get('/mahasiswa/status-laporan', [
-        EmergencyReportController::class,
-        'statusForm'
-    ])->name('mahasiswa.status');
 
-    Route::post('/mahasiswa/status-laporan', [
-        EmergencyReportController::class,
-        'track'
-    ])->name('mahasiswa.status.track');
+    // DETAIL LAPORAN
 
-    // Menampilkan detail laporan untuk petugas
     Route::get('/petugas/laporan/{id}', [
         EmergencyReportController::class,
         'show'
-    ])->name('petugas.laporan.show');
+    ])->whereNumber('id')
+      ->name('petugas.laporan.show');
 
-    // Memperbarui status dan tindak lanjut laporan
+
+    // UPDATE STATUS LAPORAN
+
     Route::put('/petugas/laporan/{id}', [
         EmergencyReportController::class,
         'update'
-    ])->name('petugas.laporan.update');
+    ])->whereNumber('id')
+      ->name('petugas.laporan.update');
 
 
-    // --------------------------------------
-    // LAPORAN DARURAT MAHASISWA
-    // --------------------------------------
-
-    // Menampilkan halaman formulir laporan
-    Route::get('/laporan-darurat', [EmergencyReportController::class, 'create'])
-        ->name('emergency-reports.create');
-
-    // Menyimpan laporan ke database
-    Route::post('/laporan-darurat', [EmergencyReportController::class, 'store'])
-        ->name('emergency-reports.store');
-
-
-    // --------------------------------------
+    // =================================================
     // LOGOUT
-    // --------------------------------------
+    // =================================================
 
-    Route::post('/logout', [LoginController::class, 'logout'])
-        ->name('logout');
+    Route::post('/logout', [
+        LoginController::class,
+        'logout'
+    ])->name('logout');
 
 });
- 
