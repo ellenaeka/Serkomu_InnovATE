@@ -8,6 +8,8 @@
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
           rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+          rel="stylesheet">
 
     <style>
         * {
@@ -31,42 +33,21 @@
         }
 
         .brand {
-            text-align: center;
-            margin-bottom: 22px;
-        }
-
-        .brand-icon {
-            width: 48px;
-            height: 48px;
-            background: #ffffff;
-            color: #4565b4;
-            border-radius: 14px;
             display: flex;
-            align-items: center;
             justify-content: center;
-            margin: 0 auto 10px;
-            font-size: 30px;
-            font-weight: bold;
-            box-shadow: 0 4px 14px rgba(45, 68, 120, 0.12);
+            margin-bottom: 24px;
         }
 
-        .brand h1 {
-            font-size: 21px;
-            font-weight: 800;
-            color: #304579;
-            margin-bottom: 2px;
-        }
-
-        .brand small {
-            color: #8290ac;
-            font-size: 10px;
-            letter-spacing: 1px;
+        a:focus-visible, button:focus-visible, input:focus-visible {
+            outline: 3px solid rgba(66, 100, 181, .45);
+            outline-offset: 2px;
         }
 
         .login-card {
             background: #ffffff;
-            border-radius: 20px;
-            padding: 28px 24px;
+            border-radius: 26px;
+            border: 1px solid #e8ecf6;
+            padding: 30px 26px;
             box-shadow: 0 8px 30px rgba(48, 69, 121, 0.10);
         }
 
@@ -79,24 +60,25 @@
         }
 
         .login-subtitle {
-            color: #8490a7;
-            font-size: 13px;
+            color: #5f6b85;
+            font-size: 14px;
             text-align: center;
             margin-bottom: 26px;
         }
 
         .form-label {
             color: #34466f;
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: 700;
         }
 
         .form-control {
             border: 1px solid #e3e8f2;
             background: #f9faff;
-            border-radius: 10px;
-            padding: 12px;
-            font-size: 13px;
+            border-radius: 14px;
+            padding: 12px 14px;
+            min-height: 46px;
+            font-size: 14px;
         }
 
         .form-control:focus {
@@ -106,11 +88,13 @@
 
         .forgot-link {
             display: block;
-            text-align: right;
-            font-size: 11px;
+            width: fit-content;
+            margin-left: auto;
+            padding: 12px 0 4px;
+            font-size: 13px;
             color: #4565b4;
             text-decoration: none;
-            margin-top: 9px;
+            margin-top: 0;
         }
 
         .btn-login {
@@ -118,11 +102,12 @@
             background: #304579;
             color: #ffffff;
             border: none;
-            border-radius: 10px;
+            border-radius: 14px;
             padding: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            margin-top: 24px;
+            min-height: 48px;
+            font-size: 15px;
+            font-weight: 700;
+            margin-top: 22px;
             transition: 0.2s;
         }
 
@@ -137,21 +122,30 @@
         }
 
         .emergency a {
-            display: inline-block;
-            border: 1px solid #f3d8d8;
-            background: #fff8f8;
-            color: #b54c4c;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 44px;
+            border: 1px solid #f1d4d0;
+            background: #fff8f7;
+            color: #a33d31;
             text-decoration: none;
-            padding: 9px 15px;
+            padding: 10px 18px;
             border-radius: 30px;
-            font-size: 11px;
+            font-size: 13px;
+            font-weight: 700;
+            transition: background .2s;
+        }
+
+        .emergency a:hover {
+            background: #fbefed;
         }
 
         .staff-link {
             text-align: center;
             margin-top: 17px;
-            font-size: 11px;
-            color: #8993a8;
+            font-size: 13px;
+            color: #5f6b85;
         }
 
         .staff-link a {
@@ -162,8 +156,8 @@
 
         .footer-text {
             text-align: center;
-            color: #a1a9ba;
-            font-size: 10px;
+            color: #6b7690;
+            font-size: 12px;
             margin-top: 20px;
         }
 
@@ -176,9 +170,6 @@
                 padding: 25px 20px;
             }
 
-            .brand h1 {
-                font-size: 20px;
-            }
         }
     </style>
 </head>
@@ -189,9 +180,7 @@
 
         <!-- Logo dan identitas aplikasi -->
         <div class="brand">
-            <div class="brand-icon">+</div>
-            <h1>serkomu.</h1>
-            <small>STUDENT HEALTH ASSISTANCE</small>
+            <x-brand-logo size="lg" align="center" subtitle="Student Health Assistance" />
         </div>
 
         <!-- Form Login -->
@@ -266,10 +255,21 @@
                     Lupa kata sandi?
                 </a>
 
-                <!-- Tombol login -->
+                {{-- Tombol login --}}
                 <button type="submit" class="btn btn-login">
                     Masuk
                 </button>
+
+            
+
+            {{-- Link Registrasi --}}
+            <p style="text-align: center; margin-top: 18px; margin-bottom: 0; font-size: 14px; color: #5f6b85;">
+                Belum punya akun?
+                <a href="{{ route('register') }}"
+                   style="color: #4565b4; font-weight: 700; text-decoration: none;">
+                    Daftar sekarang
+                </a>
+            </p>
 
             </form>
 
@@ -277,8 +277,9 @@
 
         <!-- Bantuan darurat -->
         <div class="emergency">
-            <a href="#">
-                ☎ Darurat? Telepon Bantuan Tanpa Login
+            <a href="{{ route('kontak-darurat') }}">
+                <i class="bi bi-telephone-fill" aria-hidden="true"></i>
+                Darurat? Telepon Bantuan Tanpa Login
             </a>
         </div>
 
@@ -296,4 +297,3 @@
 
 </body>
 </html>
-v

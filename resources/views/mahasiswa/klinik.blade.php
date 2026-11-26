@@ -11,51 +11,53 @@
         a { text-decoration: none; }
         .container { max-width: 1100px; min-height: 100vh; margin: auto; padding: 30px 30px 110px; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .brand { color: #5265b5; font-size: 22px; font-weight: 800; }
-        .brand small { display: block; color: #8792a8; font-size: 10px; font-weight: normal; margin-top: 4px; }
-        .profile { width: 40px; height: 40px; border-radius: 50%; background: #5265b5; color: white; display: grid; place-items: center; }
-        .connected { display: inline-block; background: #edf3ff; color: #4264b5; padding: 8px 13px; border-radius: 20px; font-size: 11px; }
+        .profile { width: 44px; height: 44px; border-radius: 50%; background: #4264b5; color: white; display: grid; place-items: center; font-size: 18px; }
+        .profile:hover { background: #36539b; }
+        a:focus-visible, button:focus-visible { outline: 3px solid rgba(66,100,181,.45); outline-offset: 3px; }
+        .connected { display: inline-flex; align-items: center; gap: 6px; background: #edf3ff; color: #2f4f96; padding: 8px 13px; border-radius: 20px; font-size: 12px; font-weight: 600; }
         .greeting { margin: 20px 0; }
         .greeting h2 { font-size: 25px; margin: 0 0 8px; }
-        .greeting p { color: #8290a4; font-size: 13px; line-height: 1.6; }
-        .booking-card { background: linear-gradient(135deg, white, #eaf1ff); padding: 23px; border-radius: 18px; display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 20px; box-shadow: 0 5px 18px rgba(40,70,130,.06); }
+        .greeting p { color: #5f6b85; font-size: 13px; line-height: 1.6; }
+        .booking-card { background: linear-gradient(135deg, white, #eaf1ff); padding: 22px 24px; border: 1px solid #e8ecf6; border-radius: 26px; display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 20px; box-shadow: 0 5px 18px rgba(40,70,130,.06); }
         .booking-content { display: flex; align-items: center; gap: 14px; }
-        .booking-icon { width: 50px; height: 50px; flex-shrink: 0; display: grid; place-items: center; background: #5265b5; color: white; border-radius: 13px; font-size: 22px; }
-        .tag { font-size: 9px; color: #4264b5; background: #dce8ff; padding: 5px 8px; border-radius: 5px; }
+        .booking-icon { width: 48px; height: 48px; flex-shrink: 0; display: grid; place-items: center; background: #4264b5; color: white; border-radius: 14px; font-size: 22px; }
+        .tag { font-size: 10.5px; font-weight: 700; color: #2f4f96; background: #dce8ff; padding: 4px 8px; border-radius: 6px; letter-spacing: .3px; }
         .booking-content h3 { font-size: 16px; margin: 9px 0 5px; }
-        .booking-content p { font-size: 11px; color: #8290a4; margin: 0; }
-        .primary-btn { display: inline-block; background: #5265b5; color: white; padding: 14px 20px; border-radius: 10px; font-size: 12px; font-weight: bold; text-align: center; }
+        .booking-content p { font-size: 13px; color: #5f6b85; margin: 0; }
+        .primary-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; background: #4264b5; color: white; padding: 12px 20px; border-radius: 14px; font-size: 14px; font-weight: bold; text-align: center; white-space: nowrap; }
+        .primary-btn:hover { background: #36539b; }
         .service-info { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 30px; }
-        .service-box { display: flex; gap: 13px; align-items: center; background: white; border-radius: 13px; padding: 16px; }
-        .service-box i { color: #5265b5; font-size: 22px; }
-        .service-box strong { display: block; font-size: 12px; }
-        .service-box small { display: block; font-size: 11px; color: #8290a4; margin-top: 5px; }
+        .service-box { display: flex; gap: 13px; align-items: center; background: white; border: 1px solid #e8ecf6; border-radius: 20px; padding: 16px 18px; }
+        .service-box i { color: #4264b5; font-size: 22px; }
+        .service-box strong { display: block; font-size: 14px; }
+        .service-box small { display: block; font-size: 12.5px; color: #5f6b85; margin-top: 5px; }
         .section-title { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 20px 0 15px; }
         .section-title h3 { font-size: 18px; margin: 0; }
-        .section-title small { color: #8290a4; font-size: 11px; }
-        .visit-card { background: white; padding: 20px; border-radius: 16px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(40,60,100,.04); }
+        .section-title small { color: #5f6b85; font-size: 12px; }
+        .visit-card { background: white; padding: 18px 20px; border: 1px solid #e8ecf6; border-radius: 20px; margin-bottom: 12px; box-shadow: 0 4px 15px rgba(40,60,100,.04); }
         .visit-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
         .visit-top h4 { font-size: 14px; margin: 0; }
-        .status-pill { padding: 7px 12px; background: #e8efff; color: #4264b5; border-radius: 20px; font-size: 10px; font-weight: bold; }
-        .status-cancelled { background: #fff0f0; color: #bc4141; }
-        .status-done { background: #e7f6ed; color: #237344; }
-        .visit-detail { background: #f5f7fc; border-radius: 11px; padding: 13px 15px; margin-top: 15px; }
-        .visit-detail p { display: flex; align-items: flex-start; gap: 9px; font-size: 12px; line-height: 1.6; color: #738098; margin: 7px 0; overflow-wrap: anywhere; }
-        .visit-detail i { color: #5265b5; flex-shrink: 0; }
-        .booking-code { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 13px; background: #edf2ff; border-radius: 9px; font-size: 11px; margin-top: 13px; }
+        .status-pill { padding: 5px 10px; background: #e5efff; color: #285db5; border-radius: 20px; font-size: 11px; font-weight: bold; white-space: nowrap; }
+        .status-cancelled { background: #ffe8e8; color: #b03a3a; }
+        .status-done { background: #e3f5e9; color: #1f6b3e; }
+        .visit-detail { display: flex; flex-wrap: wrap; gap: 4px 18px; background: #f5f7fc; border-radius: 14px; padding: 10px 14px; margin-top: 12px; }
+        .visit-detail p { display: flex; align-items: flex-start; gap: 7px; font-size: 13px; line-height: 1.55; color: #5f6b85; margin: 2px 0; min-width: 0; overflow-wrap: anywhere; }
+        .visit-detail p:nth-child(n+3) { flex-basis: 100%; }
+        .visit-detail i { color: #4264b5; flex-shrink: 0; }
+        .booking-code { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; padding: 9px 14px; background: #edf2ff; border-radius: 12px; font-size: 12px; color: #4f5d75; margin-top: 10px; }
         .booking-code strong { color: #4264b5; overflow-wrap: anywhere; }
-        .visit-actions { display: flex; gap: 10px; margin-top: 15px; }
-        .action-btn { flex: 1; display: inline-block; padding: 11px; border: none; border-radius: 9px; font-size: 11px; font-weight: bold; text-align: center; cursor: pointer; }
-        .proof-btn { background: #5265b5; color: white; }
-        .cancel-btn { background: #fff0f0; color: #bc4141; }
-        .history-btn { display: block; text-align: center; padding: 13px; border: 1px solid #dce4f5; border-radius: 10px; color: #5265b5; font-size: 12px; margin-top: 15px; }
-        .empty-state { background: white; padding: 35px 15px; text-align: center; border-radius: 15px; color: #8290a4; }
+        .visit-actions { display: flex; gap: 10px; margin-top: 12px; }
+        .action-btn { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 10px; border: none; border-radius: 14px; font-size: 13px; font-weight: bold; text-align: center; cursor: pointer; }
+        .proof-btn { background: #4264b5; color: white; }
+        .cancel-btn { background: #ffe8e8; color: #b03a3a; }
+        .history-btn { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; text-align: center; padding: 10px; border: 1px solid #dce4f5; border-radius: 14px; color: #4264b5; font-size: 13px; font-weight: 700; margin-top: 12px; }
+        .empty-state { background: white; padding: 30px 15px; text-align: center; border: 1px solid #e8ecf6; border-radius: 20px; color: #5f6b85; }
         .empty-state i { display: block; font-size: 32px; margin-bottom: 10px; }
-        .empty-state p { font-size: 12px; }
-        .notice { background: #edf2ff; padding: 15px; border-radius: 12px; margin-top: 25px; color: #687692; font-size: 11px; line-height: 1.7; }
-        .alert { padding: 13px; border-radius: 10px; margin-bottom: 15px; font-size: 12px; }
-        .alert-success { background: #e7f6ed; color: #237344; }
-        .alert-danger { background: #fff0f0; color: #bc4141; }
+        .empty-state p { font-size: 14px; margin: 0 0 4px; }
+        .notice { background: #edf2ff; padding: 14px 16px; border-radius: 14px; margin-top: 22px; color: #4f5d75; font-size: 12.5px; line-height: 1.65; }
+        .alert { padding: 13px; border-radius: 14px; margin-bottom: 15px; font-size: 12px; }
+        .alert-success { background: #e3f5e9; color: #1f6b3e; }
+        .alert-danger { background: #ffe8e8; color: #b03a3a; }
 .bottom-nav {
     position: fixed;
     z-index: 1000;
@@ -83,8 +85,9 @@
     border-radius: 30px;
     text-align: center;
     text-decoration: none;
-    color: #8290a4;
-    font-size: 10px;
+    min-height: 52px;
+    color: #5f6b85;
+    font-size: 11.5px;
     font-weight: 500;
     transition: all 0.25s ease;
 }
@@ -97,19 +100,19 @@
 
 .bottom-nav a.active {
     background: #eef0ff;
-    color: #5265b5;
+    color: #4264b5;
     font-weight: 700;
     box-shadow: 0 4px 12px rgba(82, 101, 181, 0.12);
 }
 
 .bottom-nav a:hover {
-    color: #5265b5;
+    color: #4264b5;
 }
 
         /* TAB KUNJUNGAN */
-        .clinic-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 28px 0 18px; padding: 6px; background: #e9edfa; border-radius: 13px; }
-        .clinic-tab { border: 0; border-radius: 9px; padding: 13px 10px; background: transparent; color: #687692; font-size: 12px; font-weight: 700; cursor: pointer; transition: .2s ease; }
-        .clinic-tab.active { background: #5265b5; color: #fff; box-shadow: 0 3px 10px rgba(40,60,130,.14); }
+        .clinic-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 24px 0 14px; padding: 6px; background: #e9edfa; border-radius: 20px; }
+        .clinic-tab { min-height: 44px; border: 0; border-radius: 14px; padding: 11px 10px; background: transparent; color: #4f5d75; font-size: 13px; font-weight: 700; cursor: pointer; transition: .2s ease; }
+        .clinic-tab.active { background: #4264b5; color: #fff; box-shadow: 0 3px 10px rgba(40,60,130,.14); }
         .clinic-panel[hidden] { display: none !important; }
         .clinic-panel .section-title { margin-top: 18px; }
 
@@ -118,26 +121,23 @@
             .greeting h2 { font-size: 22px; }
             .booking-card { display: block; }
             .booking-content { margin-bottom: 18px; }
-            .primary-btn { display: block; }
+            .primary-btn { display: flex; width: 100%; }
             .visit-actions { flex-direction: column; }
         }
         @media(max-width:400px) {
             .service-info { grid-template-columns: 1fr; }
             .section-title h3 { font-size: 15px; }
-            .clinic-tab { font-size: 10px; padding: 12px 5px; }
+            .clinic-tab { font-size: 12px; padding: 10px 5px; }
         }
     </style>
 </head>
 <body>
 <div class="container">
     <header class="header">
-        <div class="brand">
-            <i class="bi bi-heart-pulse-fill"></i> serkomu.
-            <small>Telkom University</small>
-        </div>
-        <div class="profile">
-            <i class="bi bi-person-fill"></i>
-        </div>
+        <x-brand-logo :href="route('mahasiswa.dashboard')" />
+        <a href="{{ route('mahasiswa.akun') }}" class="profile" aria-label="Buka profil saya">
+            <i class="bi bi-person-fill" aria-hidden="true"></i>
+        </a>
     </header>
 
     <div class="connected">
@@ -305,7 +305,7 @@
     </div>
 </div>
 
-<nav class="bottom-nav">
+<nav class="bottom-nav" aria-label="Navigasi utama">
     <a href="{{ route('mahasiswa.dashboard') }}">
         <i class="bi bi-house"></i>
         <span>Beranda</span>
@@ -316,12 +316,12 @@
         <span>Lapor</span>
     </a>
 
-    <a href="{{ route('mahasiswa.klinik') }}" class="active">
+    <a href="{{ route('mahasiswa.klinik') }}" class="active" aria-current="page">
         <i class="bi bi-hospital"></i>
         <span>Klinik</span>
     </a>
 
-    <a href="{{ route('mahasiswa.dashboard') }}">
+    <a href="{{ route('mahasiswa.akun') }}">
         <i class="bi bi-person"></i>
         <span>Profil</span>
     </a>

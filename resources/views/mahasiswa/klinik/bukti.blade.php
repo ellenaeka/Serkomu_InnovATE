@@ -257,9 +257,9 @@
 
 <div class="container">
 
-    <div class="brand">
-        <i class="bi bi-heart-pulse-fill"></i> serkomu.
-    </div>
+        <div class="brand">
+        <x-brand-logo :href="route('mahasiswa.dashboard')" />
+        </div>
 
     <div class="steps">
         <span>
@@ -302,7 +302,7 @@
 
                 <span>NOMOR ANTREAN SIMULASI</span>
 
-                <h1>{{ $nomorAntrean }}</h1>
+                <h1>{{ $appointment->queue_label }}</h1>
 
                 <span class="status
                     {{ $appointment->status === 'Dibatalkan' ? 'cancelled' : ($appointment->status === 'Selesai' ? 'done' : '') }}">

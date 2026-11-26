@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\EmergencyReport;
 use App\Models\ClinicAppointment;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
+
 
 class ProfileController extends Controller
 {
@@ -33,22 +35,44 @@ class ProfileController extends Controller
         ));
     }
 
-    public function update(Request $request)
+        public function update(Request $request)
     {
-        $user = auth()->user();
+        $user = $request->user();
 
-        abort_unless($user->role === 'mahasiswa', 403);
+        // Telepon & WhatsApp boleh diubah semua mahasiswa.
+        $rules = [
+            'phone' => ['nullable', 'string', 'max:20'],
+            'whatsapp' => ['nullable', 'string', 'max:20'],
+        ];
 
-        $validated = $request->validate([
-            'phone' => 'nullable|string|max:20',
-            'whatsapp' => 'nullable|string|max:20',
+        // Program studi & fakultas hanya untuk akun non-SSO.
+        // Untuk akun SSO, field ini tidak divalidasi dan tidak disimpan,
+        // walaupun dikirim lewat request manual.
+        if (! $user->isSSO()) {
+            $rules['program_studi'] = ['required', 'string', 'max:100'];
+            $rules['fakultas'] = ['required', 'string', Rule::in(config('serkomu.fakultas_list', []))];
+        }
+
+        // validate() hanya mengembalikan key yang ada di $rules,
+        // sehingga role, nim, name, email, dll. otomatis diabaikan.
+        $validated = $request->validate($rules, [
+            'program_studi.required' => 'Program studi wajib diisi.',
+            'program_studi.max' => 'Program studi maksimal 100 karakter.',
+            'fakultas.required' => 'Fakultas wajib dipilih.',
+            'fakultas.in' => 'Fakultas yang dipilih tidak valid.',
+            'phone.max' => 'Nomor telepon maksimal 20 karakter.',
+            'whatsapp.max' => 'Nomor WhatsApp maksimal 20 karakter.',
         ]);
+
+        if (isset($validated['program_studi'])) {
+            $validated['program_studi'] = trim($validated['program_studi']);
+        }
 
         $user->update($validated);
 
         return redirect()
             ->route('mahasiswa.akun')
-            ->with('success', 'Informasi kontak berhasil diperbarui.');
+            ->with('success', 'Profil berhasil diperbarui.');
     }
 
     public function updatePassword(Request $request)
@@ -84,5 +108,12 @@ class ProfileController extends Controller
         return redirect()
             ->route('mahasiswa.akun')
             ->with('success', 'Kata sandi berhasil diperbarui.');
+    }
+
+        public function passwordForm()
+    {
+        abort_unless(auth()->user()->role === 'mahasiswa', 403);
+
+        return view('mahasiswa.ubah-kata-sandi');
     }
 }

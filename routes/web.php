@@ -1,15 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Mahasiswa\ProfileController;
+
 use App\Http\Controllers\EmergencyReportController;
 use App\Http\Controllers\ClinicAppointmentController;
-use App\Http\Controllers\Mahasiswa\ProfileController;
+
 use App\Models\EmergencyReport;
 use App\Models\ClinicAppointment;
 
+
 // =====================================================
-// LOGIN
+// HALAMAN LOGIN
 // =====================================================
 
 Route::get('/login', [LoginController::class, 'showLogin'])
@@ -17,6 +22,29 @@ Route::get('/login', [LoginController::class, 'showLogin'])
 
 Route::post('/login', [LoginController::class, 'login'])
     ->name('login.process');
+
+
+// =====================================================
+// REGISTER MAHASISWA
+// =====================================================
+
+Route::get('/register', [RegisterController::class, 'showRegister'])
+    ->name('register');
+
+Route::post('/register', [RegisterController::class, 'register'])
+    ->middleware(['guest', 'throttle:6,1'])
+    ->name('register.process');
+
+// =====================================================
+// HALAMAN BANTUAN PUBLIK (tanpa login)
+// =====================================================
+
+Route::view('/kontak-darurat', 'mahasiswa.kontak-darurat')
+    ->name('kontak-darurat');
+
+Route::view('/panduan-bantuan', 'mahasiswa.panduan-bantuan')
+    ->name('panduan-bantuan');
+
 
 // =====================================================
 // HALAMAN UTAMA
@@ -26,11 +54,13 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+
 // =====================================================
 // ROUTE PENGGUNA LOGIN
 // =====================================================
 
 Route::middleware(['auth'])->group(function () {
+
 
     // =================================================
     // DASHBOARD MAHASISWA
@@ -82,29 +112,27 @@ Route::middleware(['auth'])->group(function () {
     })->name('mahasiswa.dashboard');
 
 
-    // =================================================
+        // =================================================
     // AKUN MAHASISWA
     // =================================================
 
-    Route::get('/mahasiswa/akun', [
-        ProfileController::class,
-        'index'
-    ])->name('mahasiswa.akun');
+    Route::get('/mahasiswa/akun', [ProfileController::class, 'index'])
+        ->name('mahasiswa.akun');
 
-    Route::put('/mahasiswa/akun', [
-        ProfileController::class,
-        'update'
-    ])->name('mahasiswa.akun.update');
+    Route::put('/mahasiswa/akun', [ProfileController::class, 'update'])
+        ->name('mahasiswa.akun.update');
 
-    Route::put('/mahasiswa/akun/password', [
-        ProfileController::class,
-        'updatePassword'
-    ])->name('mahasiswa.akun.password');
+    Route::get('/mahasiswa/akun/password', [ProfileController::class, 'passwordForm'])
+        ->name('mahasiswa.akun.password.form');
 
+    Route::put('/mahasiswa/akun/password', [ProfileController::class, 'updatePassword'])
+        ->name('mahasiswa.akun.password');
 
     // =================================================
     // KLINIK MAHASISWA
     // =================================================
+
+    // Halaman utama klinik
 
     Route::get('/mahasiswa/klinik', [
         ClinicAppointmentController::class,
@@ -112,7 +140,7 @@ Route::middleware(['auth'])->group(function () {
     ])->name('mahasiswa.klinik');
 
 
-    // PENDAFTARAN KUNJUNGAN
+    // Pendaftaran kunjungan
 
     Route::get('/mahasiswa/klinik/daftar', [
         ClinicAppointmentController::class,
@@ -125,7 +153,7 @@ Route::middleware(['auth'])->group(function () {
     ])->name('mahasiswa.klinik.store');
 
 
-    // CEK KETERSEDIAAN
+    // Cek ketersediaan jadwal
 
     Route::get('/mahasiswa/klinik/availability', [
         ClinicAppointmentController::class,
@@ -133,7 +161,7 @@ Route::middleware(['auth'])->group(function () {
     ])->name('mahasiswa.klinik.availability');
 
 
-    // KONFIRMASI PENDAFTARAN
+    // Konfirmasi pendaftaran
 
     Route::get('/mahasiswa/klinik/konfirmasi', [
         ClinicAppointmentController::class,
@@ -146,7 +174,7 @@ Route::middleware(['auth'])->group(function () {
     ])->name('mahasiswa.klinik.confirm');
 
 
-    // BUKTI PENDAFTARAN
+    // Bukti pendaftaran
 
     Route::get('/mahasiswa/klinik/bukti/{id}', [
         ClinicAppointmentController::class,
@@ -155,7 +183,7 @@ Route::middleware(['auth'])->group(function () {
       ->name('mahasiswa.klinik.bukti');
 
 
-    // PEMBATALAN KUNJUNGAN
+    // Pembatalan kunjungan
 
     Route::get('/mahasiswa/klinik/{id}/batalkan', [
         ClinicAppointmentController::class,
@@ -170,7 +198,7 @@ Route::middleware(['auth'])->group(function () {
       ->name('mahasiswa.klinik.cancel');
 
 
-    // RIWAYAT KUNJUNGAN
+    // Riwayat kunjungan
 
     Route::get('/mahasiswa/klinik/riwayat', [
         ClinicAppointmentController::class,
@@ -182,7 +210,7 @@ Route::middleware(['auth'])->group(function () {
     // SISTEM LAPOR MAHASISWA
     // =================================================
 
-    // HALAMAN UTAMA LAPOR
+    // Halaman utama laporan
 
     Route::get('/laporan-darurat', [
         EmergencyReportController::class,
@@ -190,7 +218,7 @@ Route::middleware(['auth'])->group(function () {
     ])->name('emergency-reports.create');
 
 
-    // KIRIM LAPORAN DARURAT
+    // Mengirim laporan darurat
 
     Route::post('/laporan-darurat', [
         EmergencyReportController::class,
@@ -198,7 +226,7 @@ Route::middleware(['auth'])->group(function () {
     ])->name('emergency-reports.store');
 
 
-    // CARI STATUS LAPORAN
+    // Mencari status laporan
 
     Route::post('/laporan-darurat/track', [
         EmergencyReportController::class,
@@ -206,7 +234,7 @@ Route::middleware(['auth'])->group(function () {
     ])->name('emergency-reports.track');
 
 
-    // KOMPATIBILITAS HALAMAN STATUS LAMA
+    // Kompatibilitas halaman status lama
 
     Route::get('/mahasiswa/status-laporan', [
         EmergencyReportController::class,
@@ -252,7 +280,7 @@ Route::middleware(['auth'])->group(function () {
     ])->name('petugas.laporan.index');
 
 
-    // DETAIL LAPORAN
+    // Detail laporan
 
     Route::get('/petugas/laporan/{id}', [
         EmergencyReportController::class,
@@ -261,7 +289,7 @@ Route::middleware(['auth'])->group(function () {
       ->name('petugas.laporan.show');
 
 
-    // UPDATE STATUS LAPORAN
+    // Update status laporan
 
     Route::put('/petugas/laporan/{id}', [
         EmergencyReportController::class,
